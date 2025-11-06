@@ -6,7 +6,7 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-3">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top mb-3">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">AuthApp</Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -18,7 +18,7 @@ const Navbar = () => {
               <>
                 <li className="nav-item"><Link className="nav-link" to="/login">Login</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/register">Register</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/forgot-password">Forgot Password</Link></li>
+                {/* <li className="nav-item"><Link className="nav-link" to="/forgot-password">Forgot Password</Link></li> */}
               </>
             )}
             {user && user.role === "user" && (
