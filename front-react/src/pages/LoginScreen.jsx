@@ -11,18 +11,16 @@ const LoginScreen = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const userData = await loginAPI(email, password); // Appel API
-      login(userData); // Mise à jour du contexte
-      navigate(userData.role === "admin" ? "/admin" : "/home");
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  e.preventDefault();
+  const result = await authService.login({ email, password });
+  
+  if (result.success && result.user) {
+    login(result.user);
+    navigate(result.user.role === "admin" ? "/admin" : "/home");
+  } else {
+    alert(result.message);
+  }
+};
 
   return (
     <div className="row justify-content-center mt-5">

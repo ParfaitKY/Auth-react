@@ -15,22 +15,21 @@ const RegisterScreen = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirm) {
-      alert("Les mots de passe ne correspondent pas");
-      return;
-    }
-    setLoading(true);
-    try {
-      const userData = await registerAPI({ email, password, confirmpassword: confirm, motpreferer, role });
-      login(userData); // Mise à jour du contexte
-      navigate(role === "admin" ? "/admin" : "/home");
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setLoading(false);
+    const result = await authService.register({
+      email,
+      password,
+      confirmPassword: confirm,
+      role,
+      favoriteWord,
+    });
+
+    if (result.success && result.user) {
+      login(result.user);
+      navigate(result.user.role === "admin" ? "/admin" : "/home");
+    } else {
+      alert(result.message);
     }
   };
-
   return (
     <div className="row justify-content-center mt-5">
       <div className="col-md-6">
@@ -77,7 +76,11 @@ const RegisterScreen = () => {
               <option value="user">User</option>
               <option value="admin">Admin</option>
             </select>
-            <button className="btn btn-primary w-100" type="submit" disabled={loading}>
+            <button
+              className="btn btn-primary w-100"
+              type="submit"
+              disabled={loading}
+            >
               {loading ? "Inscription..." : "S'inscrire"}
             </button>
           </form>

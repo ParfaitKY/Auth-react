@@ -8,7 +8,7 @@ export const getUsers = async () => {
 };
 
 // Supprimer un utilisateur (admin)
-export const deleteUser = async (uid) => {
+export const deleteUser = async (uid: string) => {
   const response = await api.post("/delete-user", { uid });
   if (response.data.status === "success") return true;
   throw new Error(response.data.error_description || "Erreur deleteUser");
