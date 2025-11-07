@@ -1,6 +1,7 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "./HomeScreen.css";
 
 const HomeScreen = () => {
   const { user, logout } = useContext(AuthContext);
@@ -12,12 +13,27 @@ const HomeScreen = () => {
   };
 
   return (
-    <div className="row justify-content-center mt-5">
-      <div className="col-md-8">
-        <div className="card p-4 shadow text-center">
-          <h3 className="mb-3">Bienvenue, {user?.email}</h3>
-          <p>Vous êtes connecté en tant que <strong>{user?.role}</strong>.</p>
-          <button className="btn btn-danger mt-3" onClick={handleLogout}>Déconnexion</button>
+    <div className="home-container">
+      <div className="welcome-card">
+        <h1 className="title">
+          👋 Bienvenue, <span className="username">{user?.email}</span>
+        </h1>
+        <p className="subtitle">
+          Vous êtes connecté en tant que{" "}
+          <strong className="role">{user?.role}</strong>.
+        </p>
+
+        <div className="buttons">
+          <button className="btn-primary" onClick={() => navigate("/profile")}>
+            Profil
+          </button>
+          <button className="btn-secondary" onClick={handleLogout}>
+            Déconnexion
+          </button>
+        </div>
+
+        <div className="footer">
+          <p>🌐 Explorez, découvrez et profitez de votre espace personnalisé.</p>
         </div>
       </div>
     </div>

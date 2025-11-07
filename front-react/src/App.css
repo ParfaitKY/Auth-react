@@ -1,0 +1,5 @@
+.main-content {
+  min-height: 100vh;
+  margin-top: 60px; /* pour laisser de la place à la Navbar */
+  padding-bottom: 70px; /* pour ne pas que le BottomNav recouvre le contenu */
+}

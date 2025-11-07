@@ -22,20 +22,13 @@ function AppContent() {
   return (
     <>
       <Navbar />
-      <div className="container mt-3 pt-5">
+        <div className="main-content">
         <Routes>
           <Route path="/splash" element={<SplashScreen />} />
           <Route path="/login" element={<LoginScreen />} />
           <Route path="/register" element={<RegisterScreen />} />
           <Route path="/forgot-password" element={<ForgotPasswordScreen />} />
-          <Route
-            path="/home"
-            element={
-              <ProtectedRoute role="user">
-                <HomeScreen />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/home" element={<HomeScreen />}/>
           <Route
             path="/admin"
             element={

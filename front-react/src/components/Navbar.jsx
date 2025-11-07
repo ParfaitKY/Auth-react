@@ -6,7 +6,7 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top mb-3">
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top mb-3">
       <div className="container">
         <Link className="navbar-brand" to="/">AuthApp</Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
