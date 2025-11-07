@@ -1,34 +1,34 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { register as registerAPI } from "../services/authService";
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [motpreferer, setMotPreferer] = useState("");
   const [role, setRole] = useState("user");
-  const [favoriteWord, setFavoriteWord] = useState(""); // <-- nouveau champ
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (password !== confirm) {
       alert("Les mots de passe ne correspondent pas");
       return;
     }
-
-    if (!favoriteWord) {
-      alert("Veuillez saisir votre mot préféré pour la récupération de mot de passe");
-      return;
+    setLoading(true);
+    try {
+      const userData = await registerAPI({ email, password, confirmpassword: confirm, motpreferer, role });
+      login(userData); // Mise à jour du contexte
+      navigate(role === "admin" ? "/admin" : "/home");
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
     }
-
-    // Ici on envoie normalement au backend via POST /register
-    // Pour l'instant on simule l'enregistrement dans le contexte
-    login({ email, role, favoriteWord });
-
-    navigate(role === "admin" ? "/admin" : "/home");
   };
 
   return (
@@ -38,6 +38,7 @@ const RegisterScreen = () => {
           <h3 className="text-center mb-3">Inscription</h3>
           <form onSubmit={handleSubmit}>
             <input
+              type="email"
               className="form-control mb-2"
               placeholder="Email"
               value={email}
@@ -45,26 +46,27 @@ const RegisterScreen = () => {
               required
             />
             <input
-              className="form-control mb-2"
               type="password"
+              className="form-control mb-2"
               placeholder="Mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
             <input
-              className="form-control mb-2"
               type="password"
+              className="form-control mb-2"
               placeholder="Confirmer mot de passe"
               value={confirm}
               onChange={(e) => setConfirm(e.target.value)}
               required
             />
             <input
+              type="text"
               className="form-control mb-2"
-              placeholder="Mot préféré"
-              value={favoriteWord}
-              onChange={(e) => setFavoriteWord(e.target.value)}
+              placeholder="Mot préféré (récupération mot de passe)"
+              value={motpreferer}
+              onChange={(e) => setMotPreferer(e.target.value)}
               required
             />
             <select
@@ -75,8 +77,8 @@ const RegisterScreen = () => {
               <option value="user">User</option>
               <option value="admin">Admin</option>
             </select>
-            <button className="btn btn-primary w-100" type="submit">
-              S'inscrire
+            <button className="btn btn-primary w-100" type="submit" disabled={loading}>
+              {loading ? "Inscription..." : "S'inscrire"}
             </button>
           </form>
         </div>
