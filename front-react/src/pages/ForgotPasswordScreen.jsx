@@ -29,13 +29,21 @@ const ForgotPasswordScreen = () => {
       const res = await ApiService.ResetPassword({
         email: formData.email,
         motpreferer: formData.motpreferer,
-        newPassword: formData.newPassword,
-        confirm: formData.confirm
+        newpassword: formData.newPassword,
+        confirmpassword: formData.confirm
       });
 
-      setSuccess(res.message || "Mot de passe réinitialisé avec succès !");
+      if (res.status === 'success') {
+        setSuccess(res.message || "Mot de passe réinitialisé avec succès !");
+        // Optionnel: rediriger vers la page de connexion après 2 secondes
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 2000);
+      } else {
+        setError(res.message || "Erreur lors de la réinitialisation.");
+      }
     } catch (err) {
-      setError(err.response?.data?.message || "Une erreur est survenue.");
+      setError(err.response?.data?.message || err.message || "Une erreur est survenue.");
       console.error(err);
     }
   };

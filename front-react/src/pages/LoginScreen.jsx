@@ -20,16 +20,21 @@ const LoginScreen = () => {
 
   try {
     // on envoie l'objet entier { email, password } à ton backend
-    const userData = await ApiService.LoginUser({
+    const response = await ApiService.LoginUser({
       email: formData.email,
       password: formData.password
     });
 
-    // si tout est OK, on connecte l'utilisateur
-    login(userData);
+    // Vérifier si la connexion est réussie
+    if (response.status === 'success' && response.user_infos) {
+      // si tout est OK, on connecte l'utilisateur
+      login(response.user_infos);
 
-    // redirection selon le rôle
-    navigate(userData.role === "admin" ? "/admin" : "/home");
+      // redirection selon le rôle
+      navigate(response.user_infos.role === "admin" ? "/admin" : "/home");
+    } else {
+      setError(response.message || "Email ou mot de passe incorrect.");
+    }
 
   } catch (err) {
     setError("Email ou mot de passe incorrect.");
@@ -39,15 +44,15 @@ const LoginScreen = () => {
 ;
 
   return (
-    <div className="row justify-content-center mt-5">
+    <div className="auth-page d-flex align-items-center justify-content-center">
       <div className="col-md-6">
-        <div className="card p-4 shadow">
+        <div className="card auth-card p-4 shadow-sm">
           <h3 className="text-center mb-3">Connexion</h3>
           {error && <p className="text-danger text-center">{error}</p>}
           <form onSubmit={handleSubmit}>
             <input
               name="email"
-              className="form-control mb-2"
+              className="form-control form-control-lg mb-3"
               placeholder="Email"
               value={formData.email}
               onChange={handleChange}
@@ -55,17 +60,26 @@ const LoginScreen = () => {
             />
             <input
               name="password"
-              className="form-control mb-2"
+              className="form-control form-control-lg mb-3"
               type="password"
               placeholder="Mot de passe"
               value={formData.password}
               onChange={handleChange}
               required
             />
-            <button className="btn btn-primary w-100" type="submit">
+            <button className="btn btn-primary w-100 btn-lg" type="submit">
               Se connecter
             </button>
           </form>
+          <div className="text-center mt-3">
+            <a 
+              href="#" 
+              onClick={(e) => { e.preventDefault(); navigate("/forgot-password"); }}
+              className="text-decoration-none small link-forgot"
+            >
+              Mot de passe oublié ?
+            </a>
+          </div>
         </div>
       </div>
     </div>
